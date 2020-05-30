@@ -189,8 +189,8 @@ export class Home extends moduleConnect(LitElement) {
     this.go(perspectiveId);
   }
 
-  go(perspectiveId: string) {
-    Router.go(`/doc/${perspectiveId}`);
+  go(perspectiveId: string) {        
+    Router.go(`/space/${perspectiveId}/official`);
   }
 
   renderSpaces() {

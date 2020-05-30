@@ -8,12 +8,23 @@ import { Router } from '@vaadin/router';
 export class Doc extends moduleConnect(LitElement) {
   @property({ attribute: false })
   docId!: string;
-
+  //
   @property({ attribute: false })
   defaultAuthority!: string;
 
+  @property({ attribute: false })
+  perspectiveId: string;
+
+  @property({ attribute: false })
+  pageId: string;
+
   async firstUpdated() {
-    this.docId = window.location.pathname.split('/')[2];
+    const pathElements = window.location.pathname.split('/');
+
+    this.docId = pathElements[2];
+    this.perspectiveId =
+      pathElements[3] !== 'official' ? pathElements[3] : undefined;
+    this.pageId = pathElements.length > 3 ? pathElements[4] : undefined;
 
     const eveesHttpProvider = this.requestAll(
       EveesModule.bindings.EveesRemote
@@ -34,6 +45,8 @@ export class Doc extends moduleConnect(LitElement) {
       <wiki-drawer
         @back=${() => this.goHome()}
         ref=${this.docId}
+        init-ref=${this.perspectiveId}
+        page-id=${this.pageId}
         default-authority=${this.defaultAuthority}
         .editableAuthorities=${[this.defaultAuthority]}
       ></wiki-drawer>
