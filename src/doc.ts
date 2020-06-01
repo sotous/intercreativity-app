@@ -40,11 +40,23 @@ export class Doc extends moduleConnect(LitElement) {
     Router.go(`/home`);
   }
 
+  goToPerspective(e) {
+    const { detail: { rootPerspective, perspective } } = e;    
+    Router.go(`/space/${rootPerspective}/${(!perspective) ? 'official' : perspective}`);
+  }
+
+  goToPage(e) {
+    const { detail: { official, pageId, perspective, rootPerspective } } = e;
+    Router.go(`/space/${rootPerspective}/${(official) ? 'official' : perspective}/${pageId}`);
+  }
+
   render() {
     if (this.docId === undefined) return '';
     return html`
       <wiki-drawer
         @back=${() => this.goHome()}
+        @page=${(e) => this.goToPage(e)}
+        @perspective=${(e) => this.goToPerspective(e)}
         ref=${this.docId}
         init-ref=${this.perspectiveId}
         page-id=${this.pageId}
