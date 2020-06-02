@@ -22,9 +22,6 @@ export class Doc extends moduleConnect(LitElement) {
     const pathElements = window.location.pathname.split('/');
 
     this.docId = pathElements[2];
-    this.perspectiveId =
-      pathElements[3] !== 'official' ? pathElements[3] : undefined;
-    this.pageId = pathElements.length > 3 ? pathElements[4] : undefined;
 
     const eveesHttpProvider = this.requestAll(
       EveesModule.bindings.EveesRemote
@@ -46,20 +43,22 @@ export class Doc extends moduleConnect(LitElement) {
   }
 
   goToPage(e) {
-    const { detail: { official, pageId, perspective, rootPerspective } } = e;
+    const { detail: { official, pageId, perspective, rootPerspective } } = e;    
     Router.go(`/space/${rootPerspective}/${(official) ? 'official' : perspective}/${pageId}`);
   }
 
   render() {
     if (this.docId === undefined) return '';
-    return html`
+
+    // If property `external-routing` is removed, the component will nagivate internarlly
+
+    return html`    
       <wiki-drawer
-        @back=${() => this.goHome()}
-        @page=${(e) => this.goToPage(e)}
-        @perspective=${(e) => this.goToPerspective(e)}
+        @back=${() => this.goHome()}  
+        @select-perspective=${(e) => this.goToPerspective(e)}   
+        @select-page=${(e) => this.goToPage(e)}           
+        external-routing=${true}
         ref=${this.docId}
-        init-ref=${this.perspectiveId}
-        page-id=${this.pageId}
         default-authority=${this.defaultAuthority}
         .editableAuthorities=${[this.defaultAuthority]}
       ></wiki-drawer>
